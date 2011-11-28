@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		title="URL Monitor" xmlns:monitor="com.tricedesigns.view.monitor.*"
+		initialize="view1_initializeHandler(event)"
+		>
+	<fx:Script>
+		<![CDATA[
+			import com.tricedesigns.event.NetworkInterfacesViewEvent;
+			import com.tricedesigns.view.about.AboutView;
+			import com.tricedesigns.view.monitor.MonitorDefaultView;
+			import com.tricedesigns.view.networkdetection.MainNetworkDetectionView;
+			
+			import mx.events.FlexEvent;
+			
+			protected function clickHandler(event:MouseEvent):void
+			{
+				this.parentApplication.dispatchEvent( new NetworkInterfacesViewEvent() );
+			}
+			
+			protected function view1_initializeHandler(event:FlexEvent):void
+			{
+				this.currentState = NetworkInfo.isSupported ? "default" : "networkDisabled";
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:states>
+		<s:State name="default" />
+		<s:State name="networkDisabled" />
+	</s:states>
+	
+	<monitor:MonitorDefaultView
+		top="0" left="0" bottom="{ footer.height }" 
+		bottom.networkDisabled="0" right="0" />
+			
+	<s:Group id="footer"
+			 left="0" bottom="0" right="0"
+			 includeIn="default">
+		
+		
+		<s:Button label="Network Interfaces"
+				  click="clickHandler(event)"
+				  left="5" bottom="5" right="5" top="0"/>
+	</s:Group>
+	
+	
+</s:View>

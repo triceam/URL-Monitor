@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+							xmlns:s="library://ns.adobe.com/flex/spark" 
+							firstView="com.tricedesigns.view.DefaultView" 
+							xmlns:swiz="http://swiz.swizframework.org" xmlns:controller="com.tricedesigns.controller.*"
+							frameRate="60" xmlns:model="com.tricedesigns.model.*"
+							splashScreenImage="@Embed('assets/icons/default.png')">
+	<fx:Declarations>
+		<swiz:Swiz>
+			
+			<swiz:loggingTargets>
+				<fx:Array>
+					<swiz:SwizTraceTarget id="myTraceTarget"/>
+				</fx:Array>
+			</swiz:loggingTargets>
+			
+			<swiz:config>
+				<swiz:SwizConfig 
+					eventPackages="com.tricedesigns.event.*"
+					viewPackages="com.tricedesigns.view.*, com.tricedesigns.view.about.*, com.tricedesigns.view.monitor.*, com.tricedesigns.view.networkdetection.*"
+					defaultDispatcher="global" />
+			</swiz:config>
+			
+			<swiz:beanProviders>
+				<swiz:BeanProvider>
+					<model:NetworkInterfacesModel id="networkInterfacesModel" />
+					<model:URLMonitorModel id="urlMonitorModel" />
+					<controller:NetworkInterfaceController id="networkInterfaceController" />
+					<controller:URLMonitorController id="urlMonitorController" />
+				</swiz:BeanProvider>
+			</swiz:beanProviders>
+			
+		</swiz:Swiz>
+	</fx:Declarations>
+	
+	<fx:Style source="assets/css/styles.css" />
+	
+</s:ViewNavigatorApplication>

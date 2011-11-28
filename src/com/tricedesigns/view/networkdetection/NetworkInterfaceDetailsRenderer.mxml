@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:IconItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark"  
+					labelField="name" 
+					messageFunction="networkInterfaceDetail" 
+					iconFunction="networkInterfaceIcon"
+					iconWidth="64" iconHeight="64">
+	
+	<fx:Script>
+		<![CDATA[
+			
+			[Embed(source="assets/images/active.png")]
+			public static var activeImageClass:Class;
+			
+			[Embed(source="assets/images/inactive.png")]
+			public static var inactiveImageClass:Class;
+			
+			private function networkInterfaceDetail(item:Object):String
+			{
+				var ni : NetworkInterface = this.data as NetworkInterface;
+				if ( ni )
+				{
+					var result : String = "mac: " + ni.hardwareAddress;
+					for each ( var ia : InterfaceAddress in ni.addresses )
+					{
+						result += "\nip: " + ia.address + " " + ia.ipVersion;
+					}
+					result += "\nmtu: " + ni.mtu.toString();
+					return result;
+				}
+				
+				return "Error: Unable to identify network interface.";
+			}
+			
+			private function networkInterfaceIcon(item:Object):Object
+			{
+				var ni : NetworkInterface = this.data as NetworkInterface;
+				if ( ni && ni.active )
+					return activeImageClass;
+				return inactiveImageClass;
+			}
+			
+			override protected function drawBackground(unscaledWidth:Number, unscaledHeight:Number):void
+			{
+				with ( this.graphics )
+				{
+					clear();
+					beginFill( 0xFFFFFF, 1 );
+					lineStyle(0,0,0);
+					drawRect( 0,1,unscaledWidth,unscaledHeight );
+					endFill();
+					lineStyle(1,0xDDDDDD,1);
+					moveTo( 0,unscaledHeight );
+					lineTo( unscaledWidth,unscaledHeight );
+				}
+			}
+		]]>
+	</fx:Script>
+</s:IconItemRenderer>

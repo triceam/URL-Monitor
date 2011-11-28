@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="About">
+	<fx:Script>
+		<![CDATA[
+			import flash.net.navigateToURL;
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	
+	<s:navigationContent>
+		<s:Button label="Back" click="navigator.popView()"/>
+	</s:navigationContent>
+	
+	<s:Scroller width="100%" height="100%" horizontalScrollPolicy="off">
+		<s:Group>
+			
+			<s:Label text="© 2011 Andrew Trice" />
+			<s:Button label="www.tricedesigns.com" click="navigateToURL( new URLRequest('http://www.tricedesigns.com') );" />
+			<s:Spacer height="25" />
+			<s:Label text="Powered by Adobe Flex and AIR for Mobile." />
+			<s:Button label="Adobe Flex for Mobile" click="navigateToURL( new URLRequest('http://www.flex.org') );" />
+			<s:Spacer height="25" />
+			<s:Label text="URL Monitor is a simple diagnostic application that will allow you to quickly and easily monitor the status of various URL endpoints.   Simply enter a URL into the text box and add it to the list.  A polling HTTP request will be made every 10 seconds to determine the availability of a given endpoint.  HTTP codes 200, 202, 204, 205 and 206 will be identified as a success with a green check.  All other HTTP codes will indicate a problem as a red 'X'.  To remove a listing, simply perform a horizontal swipe on a given row to reveal a delete button." width="{ width-30 }" />
+			
+			<s:layout>
+				<s:VerticalLayout 
+					horizontalAlign="center"
+					paddingBottom="10"
+					paddingLeft="10"
+					paddingRight="10"
+					paddingTop="10" />
+			</s:layout>
+		</s:Group>
+	</s:Scroller>
+	
+</s:View>

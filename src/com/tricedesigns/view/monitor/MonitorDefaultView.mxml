@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="URL Monitor"
+		viewActivate="view1_viewActivateHandler(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.tricedesigns.controller.URLMonitorController;
+			import com.tricedesigns.event.StageWebPreviewEvent;
+			import com.tricedesigns.event.URLMonitorEvent;
+			import com.tricedesigns.model.URLEntry;
+			import com.tricedesigns.model.URLMonitorModel;
+			import com.tricedesigns.view.preview.StageWebPreview;
+			
+			import mx.collections.ArrayCollection;
+			
+			import spark.events.IndexChangeEvent;
+			import spark.events.ViewNavigatorEvent;
+			
+			[Inject]
+			public var controller : URLMonitorController;
+			
+			[Bindable]
+			[Inject]
+			public var model : URLMonitorModel;
+			
+			private function addURL() : void
+			{
+				this.data
+				controller.addURL( url.text );
+			}
+			
+			[EventHandler(event="URLMonitorEvent.URL_MONITOR_ADD_SUCCESS")]
+			public function urlAddSuccess( event : URLMonitorEvent ) : void
+			{
+				feedback.setStyle( "color", 0x00CC00 );
+				feedback.text = "URL added successfully";
+				feedbackContainer.visible = true;
+				feedbackContainer.includeInLayout = true;
+				
+				url.text="";
+				url.selectRange( url.text.length, url.text.length );
+			}
+			
+			[EventHandler(event="URLMonitorEvent.URL_MONITOR_ADD_FAIL")]
+			public function urlAddFail( event : URLMonitorEvent ) : void
+			{
+				feedback.setStyle( "color", 0xFF0000 );
+				feedback.text = "Error: " + event.detail;
+				feedbackContainer.visible = true;
+				feedbackContainer.includeInLayout = true;
+				url.selectRange( url.text.length, url.text.length );
+				url.setFocus();
+			}
+			
+			
+			protected function view1_viewActivateHandler(event:ViewNavigatorEvent):void
+			{
+				url.text="";
+				url.selectRange( url.text.length, url.text.length );
+			}
+			
+			protected function list1_changeHandler(event:IndexChangeEvent):void
+			{
+				if ( list.selectedItem )
+				{
+					 controller.navigateWebView( list.selectedItem.url );
+				}
+			}
+			
+			protected function url_keyDownHandler(event:KeyboardEvent):void
+			{
+				if ( event.keyCode == Keyboard.ENTER )
+					addURL();
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	<s:navigationContent>
+		<s:Button label="Back" click="navigator.popView()"/>
+	</s:navigationContent>
+	
+	<s:VGroup
+		width="100%"
+		paddingBottom="0" paddingTop="10" paddingLeft="10" paddingRight="10">
+		
+		<s:Label text="Enter a URL to monitor:" fontSize="16" />
+	</s:VGroup> 
+	
+	<s:HGroup
+		width="100%"
+		paddingBottom="5" paddingTop="0" paddingLeft="10" paddingRight="10">
+		<s:TextInput id="url" text="" prompt="http://" width="100%" height="{ add.height }" 
+					 keyDown="url_keyDownHandler(event)"/>
+		<s:Button id="add" label="+" click="addURL();" chromeColor="#00BB00" />
+	</s:HGroup>
+	<s:VGroup
+		width="100%"
+		paddingBottom="5" paddingTop="0" paddingLeft="10" paddingRight="10"
+		id="feedbackContainer"
+		visible="false" includeInLayout="false">
+		
+		<s:Label id="feedback" text="Enter a URL to monitor:" fontSize="16"  />
+	</s:VGroup> 
+	
+	<s:Line width="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="#dddddd" />
+		</s:stroke>
+	</s:Line>
+	
+	<s:List id="list"
+			width="100%" height="100%"
+			dataProvider="{ model.urls }" 
+			itemRenderer="com.tricedesigns.view.monitor.URLMonitorIconRenderer"
+			/>
+	
+	
+	<s:Line width="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="#dddddd" />
+		</s:stroke>
+	</s:Line>
+	
+	<s:VGroup
+		width="100%"
+		paddingBottom="2" paddingTop="3" paddingLeft="5" paddingRight="5">
+		
+		<s:Label text="Enpoints 'OK' if request status HTTP (200, 202, 204, 205, 206)" fontSize="10" />
+	</s:VGroup> 
+	
+	<s:layout>
+		<s:VerticalLayout gap="0" />
+	</s:layout>
+	
+	
+</s:View>

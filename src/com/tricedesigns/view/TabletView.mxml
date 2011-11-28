@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		title="URL Monitor" 
+		xmlns:networkdetection="com.tricedesigns.view.networkdetection.*" 
+		xmlns:monitor="com.tricedesigns.view.monitor.*"
+		initialize="view1_initializeHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			protected function view1_initializeHandler(event:FlexEvent):void
+			{
+				this.currentState = NetworkInfo.isSupported ? "default" : "networkDisabled";
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	
+	
+	<s:states>
+		<s:State name="default" />
+		<s:State name="networkDisabled" />
+	</s:states>
+	
+	<networkdetection:MainNetworkDetectionView 
+		top="0" left="0" bottom="0"
+		width="260"
+		includeIn="default"/>
+	
+	<monitor:MonitorDefaultView
+		top="0" left="260" left.networkDisabled="0" bottom="0" right="0" />
+	
+	<s:Line x="260" top="0" bottom="0"
+			includeIn="default">
+		<s:stroke>
+			<s:SolidColorStroke color="#dddddd" />
+		</s:stroke>
+	</s:Line>
+	
+</s:View>

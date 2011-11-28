@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="{ data }"
+		viewActivate="view1_viewActivateHandler(event)"
+		viewDeactivate="view1_viewDeactivateHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import spark.events.ViewNavigatorEvent;
+			
+			private var stageWeb : StageWebView;
+			
+			protected function view1_viewActivateHandler(event:ViewNavigatorEvent):void
+			{
+				stageWeb = new StageWebView();
+				stageWeb.stage = this.stage;
+				udpatePosition();
+				stageWeb.loadURL( data as String );
+			}
+			
+			protected function view1_viewDeactivateHandler(event:ViewNavigatorEvent):void
+			{
+				stageWeb.stage = null;
+				stageWeb.dispose();
+			}
+			
+			override protected function updateDisplayList(w:Number, h:Number):void
+			{
+				super.updateDisplayList(w,h);
+				if ( stageWeb && ( stageWeb.viewPort.width != w && stageWeb.viewPort.height != h ))
+					udpatePosition();
+			}
+			
+			private function udpatePosition() : void
+			{
+				var local : Point = localToGlobal( new Point() );
+				stageWeb.viewPort = new Rectangle( local.x, local.y, this.width, this.height);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:navigationContent>
+		<s:Button label="Back" click="navigator.popView()"/>
+	</s:navigationContent>
+</s:View>

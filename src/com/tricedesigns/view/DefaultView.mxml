@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="URL Monitor"
+		initialize="view1_initializeHandler(event)" xmlns:view="com.tricedesigns.view.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.tricedesigns.event.NetworkInterfacesViewEvent;
+			import com.tricedesigns.event.StageWebPreviewEvent;
+			import com.tricedesigns.view.about.AboutView;
+			import com.tricedesigns.view.networkdetection.MainNetworkDetectionView;
+			import com.tricedesigns.view.preview.StageWebPreview;
+			
+			import mx.events.FlexEvent;
+			
+			protected function view1_initializeHandler(event:FlexEvent):void
+			{
+				if ( (Capabilities.screenResolutionX >= 1024 || Capabilities.screenResolutionY >= 1024) &&
+					(Capabilities.screenResolutionX >= 600 || Capabilities.screenResolutionY >= 600))
+					//currentState = "phone";
+					currentState = "tablet";
+				else
+					currentState = "phone";
+			}
+			
+			
+			[EventHandler(event="StageWebPreviewEvent.NAVIGATE")]
+			public function navigateToStageWeb( event : StageWebPreviewEvent ) : void
+			{
+				navigator.pushView( StageWebPreview, event.url );
+			}
+			
+			[EventHandler(event="NetworkInterfacesViewEvent.NAVIGATE_INTERFACES_VIEW")]
+			public function navigateToNetworkDetection( event : NetworkInterfacesViewEvent ) : void
+			{
+				navigator.pushView( MainNetworkDetectionView );
+			}
+		]]>
+	</fx:Script>
+	
+	
+	<s:actionContent>
+		<s:Button label="About" 
+				  click="navigator.pushView( AboutView );" />
+	</s:actionContent>
+	
+	<s:states>
+		<s:State name="tablet" />
+		<s:State name="phone" />
+	</s:states>
+	
+	<view:PhoneView 
+		top="0" bottom="0"
+		left="0" right="0"
+		includeIn="phone" />
+
+	
+	<view:TabletView 
+		top="0" bottom="0"
+		left="0" right="0"
+		includeIn="tablet" />
+</s:View>

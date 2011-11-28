@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		title="Network Interfaces">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.tricedesigns.controller.NetworkInterfaceController;
+			import com.tricedesigns.model.NetworkInterfacesModel;
+			
+			[Bindable]
+			[Inject]
+			public var model : NetworkInterfacesModel;
+			
+		]]>
+	</fx:Script>
+	
+	<s:navigationContent>
+		<s:Button label="Back" click="navigator.popView()"/>
+	</s:navigationContent>
+	
+	<s:List dataProvider="{ model.interfaces }" 
+			width="100%" height="100%"
+			itemRenderer="com.tricedesigns.view.networkdetection.NetworkInterfaceDetailsRenderer"/>
+</s:View>

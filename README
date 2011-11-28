@@ -1,0 +1,16 @@
+The URL Monitor application is a simple URL endpoing monitor application for iOS, Android, and BlackBerry Playbook, built using Adobe Flex & AIR 
+
+You can access the URL Monitor application "in the wild" at:
+Apple App Store: http://itunes.apple.com/us/app/mobile-url-monitor/id456005674?mt=8
+Google Android Market: https://market.android.com/details?id=air.com.tricedesigns.URLMonitor
+Amazon App Store: http://www.amazon.com/Andrew-Trice-Mobile-URL-Monitor/dp/B005HRSHAQ
+Barnes & Noble Nook Store: http://search.barnesandnoble.com/URL-Monitor/Andrew-Trice/e/2940043857842
+
+This application is written using Adobe Flex version 4.5 and Adobe AIR 3.1.
+
+This application also uses the SWIZ application framework: http://swizframework.org/
+It was built using the swiz-framework-v1.2.0.swc library
+
+You can read more about the entire workflow for getting one codebase into many ecosystems at:
+http://www.tricedesigns.com/2011/09/15/adobe-flex-air-one-developer-platform-many-devices/
+

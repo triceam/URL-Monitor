@@ -1,0 +1,15 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+
+s|ActionBar
+{
+	chromeColor: #008800;
+}
+
+@media (os-platform: "IOS")
+{
+	s|ActionBar
+	{
+		defaultButtonAppearance: beveled;
+	}
+}

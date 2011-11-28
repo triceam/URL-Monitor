@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:IconItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark"
+					labelField="url"
+					messageField="lastUpdate"
+					iconFunction="iconValidFunction"
+					creationComplete="creationCompleteHandler(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.tricedesigns.controller.URLMonitorController;
+			import com.tricedesigns.model.URLEntry;
+			
+			import flash.utils.getTimer;
+			
+			import mx.events.FlexEvent;
+			import mx.events.FlexMouseEvent;
+
+			[Embed(source="assets/images/valid.png")]
+			public static var validImageClass:Class;
+			
+			[Embed(source="assets/images/invalid.png")]
+			public static var invalidImageClass:Class;
+			
+			[Inject]
+			public var controller : URLMonitorController;
+			
+			private var lastGesture : Number = 0;
+			
+			private function iconValidFunction(item:Object):Object
+			{
+				if ( item.online )
+					return validImageClass;
+				return invalidImageClass;
+			}
+			
+			override protected function updateDisplayList(w:Number, h:Number):void
+			{
+				super.updateDisplayList(w,h);
+				viewButtonContainer.x = width - (viewButton.width+10);
+				viewButtonContainer.y = (height - viewButton.height)/2;
+			}
+			
+			override protected function drawBackground(unscaledWidth:Number, unscaledHeight:Number):void
+			{
+				with ( this.graphics )
+				{
+					clear();
+					beginFill( 0xFFFFFF, 1 );
+					lineStyle(0,0,0);
+					drawRect( 0,1,unscaledWidth,unscaledHeight );
+					endFill();
+					lineStyle(1,0xDDDDDD,1);
+					moveTo( 0,unscaledHeight );
+					lineTo( unscaledWidth,unscaledHeight );
+				}
+			}
+			
+			override public function set data(value:Object):void
+			{
+				if ( data != value )
+					restoreOriginalState();
+				super.data = value;
+			}
+			
+			
+			protected function onSwipe(event:TransformGestureEvent):void
+			{
+				var now : Number = getTimer();
+				
+				//min 500 ms to prevent overlapping gestures
+				if ( Math.abs(event.offsetX) > 0 && (now-lastGesture > 500))
+				{ 
+					if ( overlay.parent == null )
+						showOverlayState();
+					else
+					{
+						restoreOriginalState(true);
+					}
+				} 
+				lastGesture = now;
+			}
+			
+			private function restoreOriginalState( animated : Boolean = false) : void
+			{
+				if ( overlay.parent != null )
+				{
+					if (animated)
+					{	
+						showEffect.stop();
+						removeEffect.play();
+					}
+					else 
+					{
+						overlay.parent.removeChild( overlay );
+						overlay.removeEventListener( Event.ADDED_TO_STAGE, onOverlayAdded );
+					}
+				}
+			}
+			
+			private function showOverlayState() : void
+			{
+				overlay.width = this.width;
+				overlay.height = this.height;
+				overlay.visible = true;
+				overlay.addEventListener( Event.ADDED_TO_STAGE, onOverlayAdded );
+				this.addChild( overlay );
+			}
+			
+			private function onOverlayAdded( event : Event ) : void
+			{
+				removeEffect.stop();
+				showEffect.play();
+			}
+			
+			protected function viewButton_clickHandler(event:MouseEvent):void
+			{
+				controller.navigateWebView( data.url.toString() );
+				event.stopPropagation();
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				addChild( viewButtonContainer );
+				this.iconWidth = (Math.min( Capabilities.screenResolutionX, Capabilities.screenResolutionY ) > 480) ? 64 : 32;
+				this.iconHeight = this.iconWidth;
+				this.addEventListener( TransformGestureEvent.GESTURE_SWIPE, onSwipe, true );
+				viewButtonContainer.addEventListener( FlexEvent.CREATION_COMPLETE, onViewButtonCreationComplete );
+			}
+			
+			protected function removeButton_clickHandler(event:MouseEvent):void
+			{
+				event.stopPropagation();
+				controller.removeURL( data as URLEntry );
+			}
+			
+			private function onViewButtonCreationComplete( event : Event ) : void
+			{
+				invalidateDisplayList();
+				viewButtonContainer.removeEventListener( FlexEvent.CREATION_COMPLETE, onViewButtonCreationComplete );
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:Group id="overlay" >
+			<s:Rect width="100%" height="100%">
+				<s:fill>
+					<s:SolidColor color="0x000000" alpha="0.8" />
+				</s:fill>
+			</s:Rect>
+			<s:HGroup 
+				right="10" verticalCenter="0">
+				<s:Button id="removeButton" label="Delete"
+						  chromeColor="#FF0000"
+						  click="removeButton_clickHandler(event)"/>
+				<s:Button id="cancelButton" label="Cancel" 
+						  click="restoreOriginalState(true)"/>
+			</s:HGroup>
+		</s:Group>
+		<s:Move id="showEffect" target="{overlay}" duration="300" xTo="0" xFrom="{ width }" />
+		<s:Move id="removeEffect" target="{overlay}" duration="300" xTo="{ width }" xFrom="0"
+				effectEnd="restoreOriginalState()"/>
+		<s:Group
+			id="viewButtonContainer">
+			
+			<s:Button id="viewButton"
+					  label="View" click="viewButton_clickHandler(event)"/>
+		</s:Group>
+	</fx:Declarations>
+	
+</s:IconItemRenderer>
